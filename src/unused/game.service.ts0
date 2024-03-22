@@ -1,0 +1,63 @@
+import { Injectable } from '@nestjs/common';
+import { GameBoard } from './game-logic/models/game-board';
+import { Tetrimino } from './game-logic/models/tetrimino';
+
+@Injectable()
+export class GameService {
+    private readonly width: number = 10;
+    private readonly height: number = 20;
+    private readonly emptyCellValue: string = '';
+    
+    private gameBoard: GameBoard;
+    private currentTetrimino: Tetrimino | null = null;
+
+    constructor() {
+        this.gameBoard = new GameBoard(this.width, this.height, this.emptyCellValue);
+    }
+
+    public startGame(): void {
+        this.spawnTetrimino();
+    }
+
+    private spawnTetrimino(): void {
+        // Logic to spawn a new tetrimino and place it on the game board
+    }
+
+    private moveTetriminoDown(): void {
+        // Logic to move the current tetrimino down
+    }
+
+    private checkCollision(): boolean {
+        // Logic to check for collisions with other pieces or walls
+        return false;
+    }
+
+    private checkCompleteLines(): number {
+        // Logic to check and remove completed lines, and return the number of lines completed
+        return 0;
+    }
+
+    public moveTetriminoLeft(): void {
+        // Logic to move the current tetrimino left
+    }
+
+    public moveTetriminoRight(): void {
+        // Logic to move the current tetrimino right
+    }
+
+    public dropTetrimino(): void {
+        // Logic to drop the current tetrimino until collision
+    }
+
+    public rotateTetriminoClockwise(): void {
+        // Logic to rotate the current tetrimino clockwise
+    }
+
+    public rotateTetriminoCounterClockwise(): void {
+        // Logic to rotate the current tetrimino counterclockwise
+    }
+
+    public getGameBoard(): GameBoard {
+        return this.gameBoard;
+    }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Game</title>
+    <style>
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 30px); /* Ajustez la taille des cellules selon vos besoins */
+            grid-template-rows: repeat(20, 30px); /* Ajustez la taille des cellules selon vos besoins */
+            border: 1px solid #ccc;
+        }
+        .cell {
+            width: 30px; /* Ajustez la taille des cellules selon vos besoins */
+            height: 30px; /* Ajustez la taille des cellules selon vos besoins */
+            border: 1px solid #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-board" id="gameBoard">
+        <!-- Les cellules du plateau de jeu seront générées ici -->
+    </div>
+
+    <script>
+        fetch('http://localhost:3000/api/game-board-data')
+            .then(response => response.json())
+            .then(data => {
+                const gameData = data.gameData;
+                const gameBoardElement = document.getElementById('gameBoard');
+
+                // Effacer le contenu précédent du plateau de jeu
+                gameBoardElement.innerHTML = '';
+
+                // Parcourir les données du plateau de jeu
+                gameData.forEach(row => {
+                    const rowElement = document.createElement('div');
+                    rowElement.classList.add('row');
+
+                    row.forEach(cell => {
+                        const cellElement = document.createElement('div');
+                        cellElement.classList.add('cell');
+                        cellElement.textContent = cell;
+
+                        rowElement.appendChild(cellElement);
+                    });
+
+                    gameBoardElement.appendChild(rowElement);
+                });
+            })
+            .catch(error => console.error('Error fetching game board data:', error));
+    </script>
+        
+</body>
+</html>
