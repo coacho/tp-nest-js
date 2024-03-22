@@ -24,6 +24,11 @@
 
 ## Description
 
+TP nestJs - v0.1 front pas encore implementer
+
+ToDo:
+  - Back end : Transform into a game, just generating array for nmow
+
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
