@@ -4,7 +4,7 @@
     const startButton = document.getElementById('startButton');
 
     const GAMEBOARD_DATA_UPDATE_URL = 'http://localhost:3000/api/game-board-data';
-    // const SCORE_UPDATE_URL_UPDATE_URL = 'http://localhost:3000/api/game-board-data';
+    const SCORE_UPDATE_URL_UPDATE_URL = 'http://localhost:3000/api/update-score';
     const GAMEBOARD_UPDATE_URL = 'http://localhost:3000/api/game-board';
     const MOVE_URL = 'http://localhost:3000/api/move';
 
@@ -16,34 +16,40 @@
 
 // Public method - START //
     // asyncrone //
-    async function initializeGame() {
+    async function initializeGame(newGame) {
+        const indexGame = newGame ? 0 : 1;
+        updateGameBoardData(indexGame);
         updateGameBoard();
-        updateGameBoardData();
-        // await updateScore();
         move();
+        newGame = false;
     }
 
     async function fetchData(url, method, body) {
         try {
-            const response = await fetch(url, {
+            const timestamp = Date.now();  
+            const uniqueUrl = `${url}?t=${timestamp}`;
+     
+            const response = await fetch(uniqueUrl, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(body),
+                cache: 'no-cache',
             })
             .then(handleResponse)
             .then(data => {
-                console.log(`Data from ${url}:`, data);
+                console.log(`Data from ${uniqueUrl}:`, data);
                 return data;
             });
-            console.log(`Response from ${url}:`, response);
+            console.log(`Response from ${uniqueUrl}:`, response);
             return response;
         } catch(error) { 
             console.error('Error : ', error);
         }
     }
     
+    // syncrone //
     function updateGameBoard() {
         fetchData(GAMEBOARD_UPDATE_URL, 'POST', {})
         .then(gameBoardData => { 
@@ -55,54 +61,9 @@
         });
     }
 
-    // async function fetchData(url,method,body){
-    //     try {
-    //         const response = await fetch(url,{
-    //             method:method,
-    //             headers:{
-    //                 'Content-Type':'application/json',
-    //             },
-    //             body: JSON.stringify(body),
-    //         })
-    //         .then(handleResponse)
-    //         .then(data => {
-    //             console.log('Data:', data);
-    //             return data;
-    //         });
-    //         console.log('response:', response);
-    //         return response;
-    //     } catch(error){ 
-    //         console.error('Error : ',error);
-    //     }
-    // }
-    // syncrone //
-    // async function updateScore(){
-    //     await fetchData(SCORE_UPDATE_URL,'POST',{score: score.textContent});
-    // }
-
-    // function updateGameBoard(){
-    //     fetchData(GAMEBOARD_UPDATE_URL,'POST',{gameBoard: gameBoard.textContent}).then(gameBoard => { console.log('gameBoard  from updateGameBoard:'+gameBoard); displayGameBoard(gameBoard);}); 
-    // }
-    
-    
-    // function updateGameBoard(){
-    //     fetchData(GAMEBOARD_UPDATE_URL,'POST',{}).then(gameBoardData => { 
-    //         console.log('gameBoard from updateGameBoard:', gameBoardData); 
-    //         displayGameBoard(gameBoardData);
-    //     }); 
-    // }
-
-    function updateGameBoardData(){
-        fetchData(GAMEBOARD_DATA_UPDATE_URL,'POST',{});
+    function updateGameBoardData(indexGame){
+        fetchData(GAMEBOARD_DATA_UPDATE_URL,'POST',{index:indexGame});
     }
-    // function move() {
-    //     let direction = '';
-    //     document.addEventListener('keydown', function(event) {
-    //         direction = event.key;                   
-    //         console.log('Direction:', direction);    // toDo: remove
-    //         fetchData(MOVE_URL,'POST',{direction: direction}).then (gameBoard => { console.log('gameBoard from move:'+gameBoard); updateGameBoard;})
-    //     });
-    //     }
 
     function move() {
         let direction = '';
@@ -119,6 +80,7 @@
             });
         });
     }
+
     function displayGameBoard(gameBoardData) {
         
         while (gameBoard.firstChild) {
@@ -139,14 +101,6 @@
                     cell.classList.remove('tetrimino');
                     cell.textContent = '';
                 }
-                // if (gameBoardData[i][j] !== '' && gameBoardData[i][j] !== ' ' && gameBoardData[i][j] !== null && gameBoardData[i][j] !== undefined && gameBoardData[i][j] !== 0) {
-                //     cell.classList.add('tetrimino');
-                //     cell.textContent = gameBoardData[i][j];
-                // }
-                // else {
-                //     cell.classList.remove('tetrimino');
-                //     cell.textContent = '.';
-                // }
 
                 row.appendChild(cell);
                 row.textContent = row.textContent + '\n';
@@ -154,35 +108,11 @@
             gameBoard.appendChild(row);
         }
     }
-    // function displayGameBoard(gameBoardData) {
-    //     gameBoard.textContent.replace(/\n/g, '');
-    //     for (let i = 0; i < gameBoardData.length; i++) {
-    //         let row = document.createElement('div');
-    //         row.className = 'row';
-    //         for (let j = 0; j < gameBoardData[i].length; j++) {
-    //             let cell = document.createElement('div');
-    //             cell.className = 'cell';
-    //             if (gameBoardData[i][j] !== '') {
-    //                     cell.classList.add('tetrimino');
-    //                     cell.textContent = gameBoardData[i][j];
-    //             }
-    //             else {
-    //                 cell.classList.remove('tetrimino');
-    //                 cell.textContent = '.';
-    //             }
-    //             row.appendChild(cell);
-    //             row.textContent = row.textContent + '\n';
-    //         }
-    //         gameBoard.appendChild(row);
-    //     }
-    // }
-
-
 
 //  Public method - END //
 
 // Main - START //
     startButton.onclick = async function(){
-        await initializeGame().then(startButton.textContent= 'Restart');
+        await initializeGame(true).then(startButton.textContent= 'Restart', newGame = true);
     };
 // Main  - END //
