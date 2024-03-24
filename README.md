@@ -24,10 +24,11 @@
 
 ## Description
 
-TP nestJs - v0.1 front pas encore implementer
+TP nestJs - v0.2 front added but still not working
 
 ToDo:
-  - Back end : Transform into a game, just generating array for nmow
+  - Back end : error collison always true
+  - Front end : turn 0 and 1 into  colored shapes
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
