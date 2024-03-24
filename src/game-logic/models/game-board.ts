@@ -21,10 +21,9 @@ export class GameBoard {
     public setValue(row: number, col: number, value: string): void {
         this.board[row][col] = value;
     }
+    
 
     public getValue(row: number, col: number): string {
-        let test2 = this.board[row][col].valueOf();
-        console.log('test2 ', test2); 
         return this.board[row][col].valueOf();
     }
 

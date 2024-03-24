@@ -7,22 +7,16 @@ export class ControllerController {
 
     @Post('/game-board-data') 
     getGameBoardData(@Body() body: { index: number } ) : any{        
-        console.log('newGame - body index : before condition '+body.index);
-        if(body.index === 0){ //newGame
+        
+        if(body.index === 0){ //check if newGame = true then reset the game board
             body.index = 1;
-            console.log('newGame - body index : after condition '+body.index);
             this.controllerService.resetGameBoard();
         }
-        console.log('getGameBoardData');
-        return this.controllerService.startGame();
+        
+        this.controllerService.startGame();
+        return this.controllerService.getGameBoard();
     }
      
-    @Post('game-board')
-    getGameBoard(): any {
-        console.log('getGameBoard');
-        return this.controllerService.getGameBoard();;
-    }
-
     @Post('update-score')
     getScore(): any {
         console.log('getScore');

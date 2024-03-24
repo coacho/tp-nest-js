@@ -7,37 +7,36 @@ export class GameLogicService {
 
     private readonly width: number = 10;
     private readonly height: number = 20;
-    private readonly emptyCellValue: string = '[]';
+    private readonly emptyCellValue: string = '0';
 
     private gameBoard: GameBoard;
     private gameScore = 0;
     private currentTetrimino: Tetrimino;// | null = null;
-    private currentTetriminoPosition: { x: number, y: number } = { x: 0, y: 0 }; 
+    private currentTetriminoPosition: { x: number, y: number } = { x: 0, y: 0 };
 
-    constructor() {        
+    constructor() {
         this.gameBoard = new GameBoard(this.width, this.height, this.emptyCellValue);
     }
-    
+
 // Public methods - START //
-    
+
     public startGame(): void {
         this.spawnTetrimino();
     }
 
     public resetGameBoard(): void {
-        this.gameBoard = new GameBoard(this.width, this.height, this.emptyCellValue);
         this.gameScore = 0;
         this.currentTetriminoPosition.x = 0;
         this.currentTetriminoPosition.y = 0;
     }
-    
+
     public getGameBoard(): GameBoard {
         return this.gameBoard;
     }
 
     public getScore(): number {
         return this.gameScore;
-    }   
+    }
 
     public invalidMove(): void {
         return null;
@@ -64,16 +63,16 @@ export class GameLogicService {
             this.moveMatrixRight();
         }
     }
-    
+
     public moveTetriminoRight(): void {
         this.moveMatrixRight();
         if (this.checkCollision()) {
             this.moveMatrixLeft();
         }
     }
-    
+
 // Public methods - END //
-    
+
 // Private methods - START //
 
     private spawnTetrimino(): void {
@@ -86,23 +85,36 @@ export class GameLogicService {
     private generateRandomTetrimino(): void {
         const randomIndex = Math.floor(Math.random() * Tetrimino.length);
         this.currentTetrimino = Tetrimino[randomIndex];
-        console.log('currentTetrimino shape:'+this.currentTetrimino.shape + ' currentTetrimino color:'+this.currentTetrimino.color);
+        console.log( this.currentTetrimino.shape + ' ' + this.currentTetrimino.color);
+    }
+
+    private clearBoard(): void {
+        for (let row = 0; row < this.height; row++) {
+            for (let col = 0; col < this.width; col++) {
+                this.gameBoard.setValue(col, row, this.emptyCellValue);
+            }
+        }
     }
 
     private placeTetrimino(x: number, y: number): void {
+        
+        this.clearBoard(); // clear the board before placing the tetrimino
+
         if (this.currentTetrimino) {
             for (let row = 0; row < this.currentTetrimino.shape.length; row++) {
                 for (let col = 0; col < this.currentTetrimino.shape[row].length; col++) {
                     const cellValue = this.currentTetrimino.shape[row][col].toString();
-                    if (cellValue  !== this.emptyCellValue) {
-                        const boardX = x + col;
-                        const boardY = y + row;
-                        if (boardX >= 0 && boardX < this.width && boardY >= 0 && boardY < this.height) {
-                            this.gameBoard.setValue(boardX, boardY, cellValue);
+                    if (cellValue !== this.emptyCellValue) {
+                        const newBoardX = x + col;
+                        const newBoardY = y + row;
+                        if (newBoardX >= 0 && newBoardX < this.width && newBoardY >= 0 && newBoardY < this.height) {
+                            this.gameBoard.setValue(newBoardX, newBoardY, cellValue);
                         }
                     }
                 }
             }
+            this.currentTetriminoPosition.x = x;
+            this.currentTetriminoPosition.y = y;
         }
     }
 
@@ -116,12 +128,12 @@ export class GameLogicService {
                     const boardX = this.currentTetriminoPosition.x + col;
                     const boardY = this.currentTetriminoPosition.y + row;
                     if (boardX < 0 || boardX >= this.width || boardY >= this.height) {
-                        console.log('boardX'+boardX);
-                        console.log('this.width'+this.width);
-                        console.log('boardY'+boardY);
-                        console.log('this.height'+this.height);
-                        console.log('collision1');
-                        return true; 
+                        // console.log('boardX'+boardX);
+                        // console.log('this.width'+this.width);
+                        // console.log('boardY'+boardY);
+                        // console.log('this.height'+this.height);
+                        // console.log('collision1');
+                        return true;
                     }
                     // let test = this.gameBoard.getValue(boardX, boardY);
                     // console.log('test '+test);
@@ -129,7 +141,7 @@ export class GameLogicService {
                     //     console.log('this.gameBoard.getValue(boardX, boardY) '+this.gameBoard.getValue(boardX, boardY));
                     //     console.log('this.emptyCellValue) '+ this.emptyCellValue);
                     //     console.log('collision2');
-                    //     return true; 
+                    //     return true;
                     // }
                 }
             }
@@ -137,7 +149,7 @@ export class GameLogicService {
         console.log('no collision');
         return false;
     }
-    
+
     private checkCompleteLines(): number {
         let completeLines = 0;
 
@@ -169,7 +181,7 @@ export class GameLogicService {
         this.currentTetriminoPosition.x++;
         if (this.checkCollision()) {
             this.currentTetriminoPosition.x--;
-        }        
+        }
         this.placeTetrimino(this.currentTetriminoPosition.x, this.currentTetriminoPosition.y);
     }
 
@@ -177,13 +189,16 @@ export class GameLogicService {
         const rotatedMatrix: number[][] = [];
         const rowCount = matrix.length;
         const colCount = matrix[0].length;
-    
+
         for (let col = 0; col < colCount; col++) {
             const newRow: number[] = [];
             for (let row = rowCount - 1; row >= 0; row--) {
                 newRow.push(matrix[row][col]);
-            } 
+
+            }
+            // console.log('newRow '+newRow);
             rotatedMatrix.push(newRow);
+            // console.log('rotatedMatrix '+rotatedMatrix);
         }
         this.currentTetrimino.shape =  rotatedMatrix;
     }
@@ -191,11 +206,11 @@ export class GameLogicService {
     private isLineComplete(row: number): boolean {
         for (let col = 0; col < this.width; col++) {
             if (this.gameBoard.getValue(col, row) === this.emptyCellValue) {
-                return false; 
+                return false;
             }
         }
         this.updateScore();
-        return true; 
+        return true;
     }
 
     private clearLine(row: number): void {
