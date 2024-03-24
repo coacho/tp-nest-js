@@ -1,4 +1,5 @@
 export class GameBoard {
+
     private readonly width: number;
     private readonly height: number;
     private readonly emptyCellValue: string;
@@ -22,7 +23,9 @@ export class GameBoard {
     }
 
     public getValue(row: number, col: number): string {
-        return this.board[row][col];
+        let test2 = this.board[row][col].valueOf();
+        console.log('test2 ', test2); 
+        return this.board[row][col].valueOf();
     }
 
 // Public methods - END //

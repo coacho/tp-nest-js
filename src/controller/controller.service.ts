@@ -39,7 +39,15 @@ export class ControllerService {
     //     this.gameLogicService.dropTetrimino();
     // }
 
+    public resetGameBoard(): void {
+        this.gameLogicService.resetGameBoard();
+    }
+
     public getGameBoard(): string[][] {
         return this.gameLogicService.getGameBoard().getBoard();
+    }
+
+    public getScore(): number {
+        return this.gameLogicService.getScore();
     }
 }

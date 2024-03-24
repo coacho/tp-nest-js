@@ -10,6 +10,7 @@ export class GameLogicService {
     private readonly emptyCellValue: string = '';
 
     private gameBoard: GameBoard;
+    private gameScore = 0;
     private currentTetrimino: Tetrimino;// | null = null;
     private currentTetriminoPosition: { x: number, y: number } = { x: 0, y: 0 }; 
 
@@ -22,10 +23,20 @@ export class GameLogicService {
     public startGame(): void {
         this.spawnTetrimino();
     }
+
+    public resetGameBoard(): void {
+        this.gameBoard = new GameBoard(this.width, this.height, this.emptyCellValue);
+        this.gameScore = 0;
+        this.currentTetrimino = null;
+    }
     
     public getGameBoard(): GameBoard {
         return this.gameBoard;
     }
+
+    public getScore(): number {
+        return this.gameScore;
+    }   
 
     public invalidMove(): void {
         return null;
@@ -103,19 +114,21 @@ export class GameLogicService {
                     const boardX = this.currentTetriminoPosition.x + col;
                     const boardY = this.currentTetriminoPosition.y + row;
                     if (boardX < 0 || boardX >= this.width || boardY >= this.height) {
-                        console.log('boardX'+boardX);
-                        console.log('this.width'+this.width);
-                        console.log('boardY'+boardY);
-                        console.log('this.height'+this.height);
-                        console.log('collision1');
+                        // console.log('boardX'+boardX);
+                        // console.log('this.width'+this.width);
+                        // console.log('boardY'+boardY);
+                        // console.log('this.height'+this.height);
+                        // console.log('collision1');
                         return true; 
                     }
-                    if (this.gameBoard.getValue(boardX, boardY) !== this.emptyCellValue) {
-                        console.log('this.gameBoard.getValue(boardX, boardY) '+this.gameBoard.getValue(boardX, boardY));
-                        console.log('this.emptyCellValue) '+ this.emptyCellValue);
-                        console.log('collision2');
-                        return true; 
-                    }
+                    // let test = this.gameBoard.getValue(boardX, boardY);
+                    // console.log('test '+test);
+                    // if (this.gameBoard.getValue(boardX, boardY) !== this.emptyCellValue){
+                    //     console.log('this.gameBoard.getValue(boardX, boardY) '+this.gameBoard.getValue(boardX, boardY));
+                    //     console.log('this.emptyCellValue) '+ this.emptyCellValue);
+                    //     console.log('collision2');
+                    //     return true; 
+                    // }
                 }
             }
         }
@@ -179,6 +192,7 @@ export class GameLogicService {
                 return false; 
             }
         }
+        this.updateScore();
         return true; 
     }
 
@@ -192,6 +206,10 @@ export class GameLogicService {
         for (let x = 0; x < this.width; x++) {
             this.gameBoard.setValue(x, 0, this.emptyCellValue);
         }
+    }
+
+    private updateScore(): void {
+        this.gameScore += 100;
     }
 
 
