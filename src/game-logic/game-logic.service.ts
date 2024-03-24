@@ -7,7 +7,7 @@ export class GameLogicService {
 
     private readonly width: number = 10;
     private readonly height: number = 20;
-    private readonly emptyCellValue: string = '';
+    private readonly emptyCellValue: string = '[]';
 
     private gameBoard: GameBoard;
     private gameScore = 0;
@@ -27,7 +27,8 @@ export class GameLogicService {
     public resetGameBoard(): void {
         this.gameBoard = new GameBoard(this.width, this.height, this.emptyCellValue);
         this.gameScore = 0;
-        this.currentTetrimino = null;
+        this.currentTetriminoPosition.x = 0;
+        this.currentTetriminoPosition.y = 0;
     }
     
     public getGameBoard(): GameBoard {
@@ -85,6 +86,7 @@ export class GameLogicService {
     private generateRandomTetrimino(): void {
         const randomIndex = Math.floor(Math.random() * Tetrimino.length);
         this.currentTetrimino = Tetrimino[randomIndex];
+        console.log('currentTetrimino shape:'+this.currentTetrimino.shape + ' currentTetrimino color:'+this.currentTetrimino.color);
     }
 
     private placeTetrimino(x: number, y: number): void {
@@ -103,7 +105,7 @@ export class GameLogicService {
             }
         }
     }
-    
+
     private checkCollision(): boolean {
         if (!this.currentTetrimino) {
             return false;
@@ -114,11 +116,11 @@ export class GameLogicService {
                     const boardX = this.currentTetriminoPosition.x + col;
                     const boardY = this.currentTetriminoPosition.y + row;
                     if (boardX < 0 || boardX >= this.width || boardY >= this.height) {
-                        // console.log('boardX'+boardX);
-                        // console.log('this.width'+this.width);
-                        // console.log('boardY'+boardY);
-                        // console.log('this.height'+this.height);
-                        // console.log('collision1');
+                        console.log('boardX'+boardX);
+                        console.log('this.width'+this.width);
+                        console.log('boardY'+boardY);
+                        console.log('this.height'+this.height);
+                        console.log('collision1');
                         return true; 
                     }
                     // let test = this.gameBoard.getValue(boardX, boardY);

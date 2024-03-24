@@ -5,12 +5,6 @@ import { ControllerService } from './controller.service';
 export class ControllerController {
     constructor(private readonly controllerService: ControllerService) {}
 
-    @Post('game-board')
-    getGameBoard(): any {
-        console.log('getGameBoard');
-        return this.controllerService.getGameBoard();;
-    }
-
     @Post('/game-board-data') 
     getGameBoardData(@Body() body: { index: number } ) : any{        
         console.log('newGame - body index : before condition '+body.index);
@@ -23,6 +17,12 @@ export class ControllerController {
         return this.controllerService.startGame();
     }
      
+    @Post('game-board')
+    getGameBoard(): any {
+        console.log('getGameBoard');
+        return this.controllerService.getGameBoard();;
+    }
+
     @Post('update-score')
     getScore(): any {
         console.log('getScore');
